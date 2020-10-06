@@ -1,56 +1,72 @@
 module.exports = function check(str, bracketsConfig) {
   const lenB = bracketsConfig.length;
   const lenS = str.length;
-  var counter = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-  var breaker = [];
-  var number = 0;
-  var countNum = 0;
+  var countNum = -1;
   var stArr = [];
+  var stArr2 = [];
+  var stArr3 = [];
+  var type = [];
+  var summer = [];
   var helper = -1;
+  var forCount = 0;
+  var sammer = [];
+  var openClose =[];
   for (var i = 0; i < lenS; i++){
     for (var j = 0; j < lenB; j++){
       if ( bracketsConfig[j][0] === str[i] ) { 
-        if (bracketsConfig[j][0] === bracketsConfig[j][1] ){
-          helper *= -1;
-          if (helper === -1){
-            
-            stArr[i] = countNum-1;
-            countNum--; 
-          } 
-          else {
+          if (bracketsConfig[j][0] === bracketsConfig[j][1]){
+           helper *= -1;
+          if ( helper === -1 ) {
             stArr[i] = countNum;
-            countNum++;
-         } 
+            stArr2[i] = countNum;
+            stArr3[i] = countNum;
+            type[i] = j;
+            countNum--;
+            stArr[i] ='L';
+            openClose[i] = 'o';
+ 
           } else {
-            stArr[i] = countNum;
+            stArr[i] = countNum + 1;
+            stArr2[i] = countNum + 1;
+            stArr3[i] = countNum + 1;
+            type[i] = j;
             countNum++;
-         }
-      } else if ( bracketsConfig[j][1] === str[i]) {  
-        --countNum; 
-        stArr[i] = countNum;
-      }
+            stArr[i] = 'R';
+            openClose[i] = 'c';
+          
+          }} else {
+          stArr[i] = countNum + 1;
+          stArr2[i] = countNum + 1;
+          stArr3[i] = countNum + 1;
+          type[i] = j;
+          countNum++;
+          openClose[i] = 'c';
+          }
+          break;
+        } else 
+        if ( bracketsConfig[j][1] === str[i] ) { 
+          stArr[i] = countNum;
+          stArr2[i] = countNum;
+          stArr3[i] = countNum;
+          type[i] = j;
+          countNum--;
+          openClose[i] = 'o';
+          break;
     }
   } 
- 
-  if (stArr.sort()[0]  < 0 || stArr.length % 2 === 1)
- return false;
- 
-  return str + '-> '+  stArr + '-> ' + stArr.length + ' ->' + stArr.sort()[0] + ' ' +stArr.length % 2  + ' ' + stArr[stArr.length];
-
-
-  for (var i = 0; i < lenS; i++){
-    for (var j = 0; j < lenB; j++){
-      if ( bracketsConfig[j][0] === str[i] ) { 
-        number++; 
-        breaker[number] = new Array();  
-        breaker[number][0] = bracketsConfig[j][1];
-        breaker[number][1] = 1;
-      } else if ( bracketsConfig[j][1] === str[i] && breaker[number] === str[i]) {  
-        number--; 
-        breaker.pop();
-      }
+}
+for (var i = 0; i < lenS; i++){ summer[i] = 1; }
+for (var i = 0; i < lenS; i++){
+  for (var j = 0; j < lenS; j++){
+    if ((stArr3[i] === stArr3[j]) && (type[i] === type[j]) && (summer[i] !== 0) && (summer[j] !== 0) && (i !== j) && (openClose[i] === 'o') && (openClose[j] === 'c')){
+      summer[i] = 0;
+      summer[j] = 0;
+      forCount += 2;
     }
-  } 
-  return number;
-  if (number === 0) return true; else return false;
+  }
+}
+var test = 0; 
+if (stArr2.sort()[0]  < 0 || stArr2.length % 2 === 1 || forCount !== stArr3.length)
+return false;
+return true;
 }
